@@ -16,7 +16,7 @@ tbl_summary(
 		character_1_gender ~ "Gender of the oldest",
 		character_2_gender ~ "Gender of the youngest",
 		actor_1_age ~ "Age of the oldest",
-		actor_2_age ~ "Age of the younges"
+		actor_2_age ~ "Age of the youngest"
 	),
 	missing_text = "Missing") |>
 	add_p(test = list(all_continuous() ~ "t.test",
@@ -26,4 +26,15 @@ tbl_summary(
 	modify_footnote(update = everything() ~ NA) |>
 	modify_header(label = "**Variable**", p.value = "**P**")
 
+
+
+linear_model <- lm(age_difference ~ release_year + actor_1_age + actor_2_age,
+									 data = age_gaps)
+tbl_regression(
+	linear_model,
+	intercept = TRUE,
+	label = list(
+		actor_1_age ~ "Age of the oldest",
+		actor_2_age ~ "Age of the youngest"
+	))
 
