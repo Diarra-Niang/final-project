@@ -4,6 +4,8 @@ age_gaps <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 install.packages(gtsummary)
 library(gtsummary)
 
+
+#GtSummary
 summary(age_gaps)
 view(age_gaps)
 
@@ -28,6 +30,9 @@ tbl_summary(
 
 
 
+
+#Linear regression
+
 linear_model <- lm(age_difference ~ release_year + actor_1_age + actor_2_age,
 									 data = age_gaps)
 tbl_regression(
@@ -37,4 +42,28 @@ tbl_regression(
 		actor_1_age ~ "Age of the oldest",
 		actor_2_age ~ "Age of the youngest"
 	))
+
+
+# Create a figure
+
+figure1 <- hist(age_gaps$age_difference)
+
+
+
+# write and use function
+
+new_mean <- function(x){ n <- length(x)
+	mean_val <- sum(x)/n
+	return(mean_val)}
+
+new_mean(age_gaps$age_difference)
+
+
+
+
+
+
+
+
+
 
