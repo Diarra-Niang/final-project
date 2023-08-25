@@ -26,7 +26,8 @@ library("gtsummary")
 library ("dplyr")
 library("broom")
 library("here")
-
+library("renv")
+library("usethis")
  
  tbl_summary(age_gaps,
 	by = character_1_gender,
@@ -46,7 +47,7 @@ library("here")
 
 
 ```
-inline_text(tbl-one, variable="actor_1_age") 
+
 
 
 
@@ -108,5 +109,8 @@ print(mean_age)
 ## Conclusion
 
 @fig-hist contains a histogram decribing the frequencies of the couples and @tbl-one is a summary of age gaps by age of the oldest and youngest.
+
+inline_text(tbl-one, variable="actor_1_age")  
+
 
 
