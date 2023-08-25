@@ -1,26 +1,112 @@
 ---
-title: "DN Final Project Quarto"
+title: "Hollywood Age Gaps Final Project"
+author: Diarra Niang
 format: html
 editor: visual
+execute: 
+  eval: true
+  echo: false
+  warnings: false 
 ---
 
-## Quarto
+## Brief Description
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+The final Project data is pulled from: https://github.com/rfordatascience/tidytuesday#datasets. The dataset name is called **Hollywood Age Gaps**
 
-## Running Code
+## Table summary
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+```{r, message=FALSE}
+#| label: tbl-one
+#| tbl-cap: "This is a summary table of age gaps by gender if the oldest including the the age of the oldest and the youngest actor"
 
-```{r}
-1 + 1
+age_gaps <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-14/age_gaps.csv')
+
+
+library("gtsummary")
+library ("dplyr")
+library("broom")
+library("here")
+
+ 
+ tbl_summary(age_gaps,
+	by = character_1_gender,
+	include = c(actor_1_age, actor_2_age),
+	label = list(
+		actor_1_age ~ "Age of the oldest",
+		actor_2_age ~ "Age of the youngest"
+	),
+	missing_text = "Missing") |>
+	add_p(test = list(all_continuous() ~ "t.test",
+										all_categorical() ~ "chisq.test")) |>
+	add_overall(col_label = "**Total**") |>
+	bold_labels() |>
+	modify_footnote(update = everything() ~ NA) |>
+	modify_header(label = "**Variable**", p.value = "**P**")
+ 
+
+
+```
+inline_text(tbl-one, variable="actor_1_age") 
+
+
+
+## Linear Regression
+
+```{r results='asis"'}
+#| label: tbl-two
+#| tbl-cap: "Linear regression of age difference"
+
+linear_model <- lm(age_difference ~ release_year + actor_1_age + actor_2_age,
+									 data = age_gaps)
+
+tbl_regression(
+	linear_model,
+	intercept = TRUE,
+	label = list(
+		actor_1_age ~ "Age of the oldest",
+		actor_2_age ~ "Age of the youngest"
+	))
+
+
+
+
 ```
 
-You can add options to executable code like this
+## Histogram
 
 ```{r}
-#| echo: false
-2 * 2
+#| label: fig-hist
+#| fig-cap: "Histogram of the couples listed for the film "
+
+
+histogram <- hist(age_gaps$couple_number)
+
+png_file <- here ("images", "my_hist.png")
+
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+
+
+## Function
+
+```{r}
+
+new_mean <- function(x){ n <- length(x)
+	mean_val <- sum(x)/n
+	return(mean_val)}
+
+mean_age <- new_mean(age_gaps$age_difference)
+
+print(mean_age)
+
+
+```
+
+
+
+## Conclusion
+
+@fig-hist contains a histogram decribing the frequencies of the couples and @tbl-one is a summary of age gaps by age of the oldest and youngest.
+
+
